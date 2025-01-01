@@ -1,7 +1,8 @@
-import React, { useState } from "react"
+import { useState } from "react"
 import {account} from "../Types/Account"
 import Paper from "@mui/material/Paper/Paper";
-import { Button, Card, CardContent, Grid, TextField } from "@mui/material";
+import { Button, Grid } from "@mui/material";
+import { TransactionCard } from "./TransactionCard";
 
 type AccountDashboardProps = {
   account: account;
@@ -58,59 +59,10 @@ export const AccountDashboard = (props: AccountDashboardProps) => {
       <h2>Balance: ${account.amount}</h2>
       <Grid container spacing={2} padding={2}>
         <Grid item xs={6}>
-          <Card className="deposit-card">
-            <CardContent>
-              <h3>Deposit</h3>
-              <TextField 
-                label="Deposit Amount" 
-                variant="outlined" 
-                type="number"
-                sx={{
-                  display: 'flex',
-                  margin: 'auto',
-                }}
-                onChange={(e) => setDepositAmount(+e.target.value)}
-              />
-              <Button 
-                variant="contained" 
-                sx={{
-                  display: 'flex', 
-                  margin: 'auto', 
-                  marginTop: 2}}
-                onClick={depositFunds}
-              >
-                Submit
-              </Button>
-            </CardContent>
-          </Card>
+          <TransactionCard label="Deposit" handleTransaction={depositFunds} setAmount={setDepositAmount} />
         </Grid>
         <Grid item xs={6}>
-          <Card className="withdraw-card">
-            <CardContent>
-              <h3>Withdraw</h3>
-              <TextField 
-                label="Withdraw Amount" 
-                variant="outlined" 
-                type="number" 
-                sx={{
-                  display: 'flex',
-                  margin: 'auto',
-                }}
-                onChange={(e) => setWithdrawAmount(+e.target.value)}
-              />
-              <Button 
-                variant="contained" 
-                sx={{
-                  display: 'flex', 
-                  margin: 'auto', 
-                  marginTop: 2
-                }}
-                onClick={withdrawFunds}
-                >
-                  Submit
-                </Button>
-            </CardContent>
-          </Card>
+          <TransactionCard label="Withdraw" handleTransaction={withdrawFunds} setAmount={setWithdrawAmount} />
         </Grid>
       </Grid>
     </Paper>
