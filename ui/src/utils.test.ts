@@ -15,20 +15,30 @@ describe('isValidWithdrawl', () => {
         valid: true, message: ''
         });
     });
-    test('exceeds limit', () => {
+    test('exceeds transaction limit', () => {
         expect(isValidWithdrawl({ accountInfo, withdrawAmount: 300 })).toEqual({
         valid: false, message: 'Withdrawls cannot exceed $200'
         });
     });
+    test("exceeds credit limit", () => {
+      const account = { ...accountInfo, type: 'credit', creditLimit: 100, amount: -20 };
+      expect(
+        isValidWithdrawl({ accountInfo: account, withdrawAmount: 90 })
+      ).toEqual({
+        valid: false,
+        message: "You cannot exceed your credit limit",
+      });
+    });
     test('exceeds balance', () => {
         const account = {...accountInfo, amount: 0 };
         expect(
-          isValidWithdrawl({ accountInfo: account, withdrawAmount: 300 })
+          isValidWithdrawl({ accountInfo: account, withdrawAmount: 100 })
         ).toEqual({
           valid: false,
           message: 'You cannot withdraw more than your balance',
         });
     });
+
     test('is not in increments of $5', () => {
       expect(isValidWithdrawl({ accountInfo, withdrawAmount: 12 })).toEqual({
         valid: false,

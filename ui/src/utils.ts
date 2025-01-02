@@ -11,7 +11,7 @@ export function isValidWithdrawl({
   if (accountInfo.type !== 'credit' && withdrawAmount > accountInfo.amount) {
     return { valid: false, message: 'You cannot withdraw more than your balance'}
   }
-  if (accountInfo.type === 'credit' && withdrawAmount > accountInfo.creditLimit) {
+  if (accountInfo.type === 'credit' && Math.abs(accountInfo.amount) +  Math.abs(withdrawAmount) > accountInfo.creditLimit) {
     return { valid: false, message: 'You cannot exceed your credit limit' };
   }
   if (withdrawAmount > 200) {
