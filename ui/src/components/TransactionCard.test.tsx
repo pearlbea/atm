@@ -13,6 +13,7 @@ describe('TransactionCard', () => {
             label="Deposit"
             handleTransaction={handleTransaction}
             setAmount={setAmount}
+            transactionError={{valid: true, message: ''}}
           />
         );
         expect(screen.getByLabelText('Deposit Amount')).toBeTruthy();
@@ -21,11 +22,12 @@ describe('TransactionCard', () => {
     it('should call setAmount on change', async () => {
         const user = userEvent.setup();
         render(
-            <TransactionCard
+          <TransactionCard
             label="Deposit"
             handleTransaction={handleTransaction}
             setAmount={setAmount}
-            />
+            transactionError={{ valid: true, message: "" }}
+          />
         );
         await user.type(screen.getByLabelText("Deposit Amount"), '200');
         expect(setAmount).toHaveBeenCalled();
@@ -36,13 +38,25 @@ describe('TransactionCard', () => {
     it("should call handleTransaction on submit", async () => {
         const user = userEvent.setup();
         render(
+          <TransactionCard
+            label="Deposit"
+            handleTransaction={handleTransaction}
+            setAmount={setAmount}
+            transactionError={{ valid: true, message: "" }}
+          />
+        );
+        await user.click(screen.getByText("Submit"));
+        expect(handleTransaction).toHaveBeenCalled();
+    });
+    it("should display an error message on error", async () => {
+        render(
         <TransactionCard
             label="Deposit"
             handleTransaction={handleTransaction}
             setAmount={setAmount}
+            transactionError={{ valid: false, message: "This is an error" }}
         />
         );
-        await user.click(screen.getByText("Submit"));
-        expect(handleTransaction).toHaveBeenCalled();
+        expect(screen.getByText('This is an error')).toBeTruthy();
     });
 })

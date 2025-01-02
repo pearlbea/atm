@@ -1,14 +1,15 @@
-import { Button, Card, CardContent, TextField } from "@mui/material";
+import { Alert, Button, Card, CardContent, TextField } from "@mui/material";
 import type { Dispatch, SetStateAction } from "react";
 
 interface TransactionCardProps {
   label: string;
   handleTransaction: () => Promise<void>;
   setAmount: Dispatch<SetStateAction<number>>;
+  transactionError: { valid: boolean, message: string };
 }
 
 export const TransactionCard = (props: TransactionCardProps) => {
-  const { label, setAmount, handleTransaction } = props;
+  const { label, setAmount, handleTransaction, transactionError } = props;
   return (
     <Card className="transaction-card">
       <CardContent>
@@ -24,6 +25,11 @@ export const TransactionCard = (props: TransactionCardProps) => {
             }}
             onChange={(e) => setAmount(+e.target.value)}
           />
+          {!transactionError.valid ? (
+            <Alert sx={{ my: 2 }} severity="error">
+              {transactionError.message}
+            </Alert>
+          ) : null}
           <Button
             variant="contained"
             sx={{
