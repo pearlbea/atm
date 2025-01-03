@@ -34,3 +34,16 @@ export const deposit = async (accountID: string, amount: number) => {
 
   return account;
 }
+
+export const log = async (accountID: string, amount: number, type: string) => {
+  const res = await query(`
+    INSERT INTO transactions (account_number, transaction_amount, transaction_type)
+    VALUES ($1, $2, $3)`,
+    [accountID, amount, type]
+  );
+
+  if (res.rowCount === 0) {
+    throw new Error("Transaction failed");
+  }
+  return accountID; 
+}

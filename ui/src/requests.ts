@@ -27,3 +27,17 @@ export async function withdraw({ accountNumber, withdrawAmount}: { accountNumber
     const data = await response.json();
     return data
 }
+
+export async function logTransaction({accountNumber, amount, type } :{accountNumber: number, amount: number, type: string})  {
+  const requestOptions = {
+    method: 'PUT',
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ amount, type }),
+  };
+  const response = await fetch(
+    `${ROOT_URL}/transactions/${accountNumber}/log`,
+    requestOptions
+  );
+  const data = await response.json();
+  return data;
+}
