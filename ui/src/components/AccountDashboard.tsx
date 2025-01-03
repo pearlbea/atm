@@ -4,6 +4,7 @@ import Paper from "@mui/material/Paper/Paper";
 import { Alert, Button, Grid, Snackbar } from "@mui/material";
 import { TransactionCard } from "./TransactionCard";
 import { isValidDeposit, isValidWithdrawl } from "../utils";
+import { deposit, withdraw } from "../requests";
 
 type AccountDashboardProps = {
   account: account;
@@ -29,25 +30,19 @@ export const AccountDashboard = (props: AccountDashboardProps) => {
     if (!isValid.valid) {
       return setDepositError(isValid);
     }
-
-    const requestOptions = {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({amount: depositAmount})
-    }
-    try {
-      const response = await fetch(`http://localhost:3000/transactions/${account.accountNumber}/deposit`, requestOptions);
-      const data = await response.json();
+    const response = await deposit({ accountNumber: account.accountNumber, depositAmount });
+    if (response.account_number) {
+      setStatus("success");
       setAccount({
-        accountNumber: data.account_number,
-        name: data.name,
-        amount: data.amount,
-        type: data.type,
-        creditLimit: data.credit_limit
+        accountNumber: response.account_number,
+        name: response.name,
+        amount: response.amount,
+        type: response.type,
+        creditLimit: response.credit_limit
       });
-      setStatus('success');
-    } catch {
-      setStatus('error');
+      setDepositAmount(0);
+    } else {
+      setStatus("error");
     }
   }
 
@@ -57,23 +52,18 @@ export const AccountDashboard = (props: AccountDashboardProps) => {
     if (!isValid.valid) {
       return setWithdrawError(isValid)
     }
-    const requestOptions = {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({amount: withdrawAmount})
-    }
-    try {
-      const response = await fetch(`http://localhost:3000/transactions/${account.accountNumber}/withdraw`, requestOptions);
-      const data = await response.json();
+    const response = await withdraw({ accountNumber: account.accountNumber, withdrawAmount});
+    if (response.account_number) {
+      setStatus("success")
       setAccount({
-        accountNumber: data.account_number,
-        name: data.name,
-        amount: data.amount,
-        type: data.type,
-        creditLimit: data.credit_limit
+        accountNumber: response.account_number,
+        name: response.name,
+        amount: response.amount,
+        type: response.type,
+        creditLimit: response.credit_limit
       });
-      setStatus('success')
-    } catch {
+
+    } else {
       setStatus('error')
     }
   };
